@@ -45,9 +45,9 @@ def fastdtw(x, y, dist):
     If a string is passed, the distance function can be 'braycurtis', 'canberra', 'chebyshev', 'cityblock', 'correlation', 'cosine', 'dice', 'euclidean', 'hamming', 'jaccard', 'kulsinski', 'mahalanobis', 'matching', 'minkowski', 'rogerstanimoto', 'russellrao', 'seuclidean', 'sokalmichener', 'sokalsneath', 'sqeuclidean', 'wminkowski', 'yule'.
     Returns the minimum distance, the cost matrix, the accumulated cost matrix, and the wrap path.
     """
-    assert len(x)
-    assert len(y)
     r, c = len(x), len(y)
+    assert r
+    assert c
     D0 = zeros((r + 1, c + 1))
     D0[0, 1:] = inf
     D0[1:, 0] = inf
@@ -57,10 +57,10 @@ def fastdtw(x, y, dist):
     for i in range(r):
         for j in range(c):
             D1[i, j] += min(D0[i, j], D0[i, j+1], D0[i+1, j])
-    if len(x)==1:
-        path = zeros(len(y)), range(len(y))
-    elif len(y) == 1:
-        path = range(len(x)), zeros(len(x))
+    if r == 1:
+        path = zeros(c), range(c)
+    elif c == 1:
+        path = range(r), zeros(r)
     else:
         path = _traceback(D0)
     return D1[-1, -1] / sum(D1.shape), C, D1, path
